@@ -21,7 +21,8 @@
  .time-slider-container { 
  width: 90%; 
  max-width: 800px;
- margin-bottom: 40px; 
+ margin-bott
+om: 40px; 
  padding: 25px; 
  background-color: #2c2c54; /* Чуть светлее фон */
  border-radius: 12px; 
@@ -42,7 +43,6 @@
  -webkit-appearance: none;
  appearance: none;
  background: #55557a; /* Цвет дорожки */
-
  border-radius: 4px;
  cursor: pointer;
  }
@@ -116,7 +116,8 @@
  .info-panel h2 { 
  color: #fca311; /* Желтый/Оранжевый для заголовка */
  margin-bottom: 15px;
- text-align: left;
+ text-a
+lign: left;
  }
 
  .info-panel p { 
@@ -133,8 +134,7 @@
  </div>
 
  <div class="map-container">
- <
-div class="country-button" onclick="selectCountry('russia')">Россия</div>
+ <div class="country-button" onclick="selectCountry('russia')">Россия</div>
  <div class="country-button" onclick="selectCountry('usa')">США</div>
  <div class="country-button" onclick="selectCountry('china')">Китай</div>
  </div>
@@ -147,7 +147,6 @@ div class="country-button" onclick="selectCountry('russia')">Россия</div>
 
 <script>
  // 1. База данных для прототипа (РАСШИРЕННАЯ ВЕРСИЯ)
- // Здесь хранится информация о странах по годам.
  const database = {
  russia: {
  1990: { description: "Конец эпохи СССР. Экономика охвачена дефицитом, внедряются либеральные реформы Перестройки. Растут националистические настроения в республиках, начинается 'парад суверенитетов'. Государство балансирует на грани распада." },
@@ -156,9 +155,9 @@ div class="country-button" onclick="selectCountry('russia')">Россия</div>
  },
  usa: {
  1990: { description: "Период после окончания Холодной войны. США утверждают свою роль единственной сверхдержавы. Операция 'Буря в пустыне' в Персидском заливе. Начало взрывного роста персональных компьютеров и зарождение коммерческого Интернета." },
- 2000: { description: "Эпоха после краха 'доткомов' и спорных выборов президента Буша. Теракты 11 сентября 2001 года навсегда меняют внешнюю политику: начинается 'Война с террором' в Афганистане и Ираке. Усиление внутренней безопасности." },
- 2025: { description: "Высокая степень политической поляризации и социальных разногласий. Масштабные инвестиции в развитие искусствен
-ного интеллекта (ИИ) и 'зеленую' энергетику. Продолжается технологическое и экономическое соперничество с Китаем." }
+ 2000: { d
+escription: "Эпоха после краха 'доткомов' и спорных выборов президента Буша. Теракты 11 сентября 2001 года навсегда меняют внешнюю политику: начинается 'Война с террором' в Афганистане и Ираке. Усиление внутренней безопасности." },
+ 2025: { description: "Высокая степень политической поляризации и социальных разногласий. Масштабные инвестиции в развитие искусственного интеллекта (ИИ) и 'зеленую' энергетику. Продолжается технологическое и экономическое соперничество с Китаем." }
  },
  china: {
  1990: { description: "Продолжение политики 'реформ и открытости' после событий 1989 года. Фокус на развитии особых экономических зон (ОЭЗ) для привлечения иностранных инвестиций. Активная урбанизация и быстрый рост прибрежных провинций." },
@@ -196,8 +195,47 @@ div class="country-button" onclick="selectCountry('russia')">Россия</div>
  selectedButton.classList.add('active');
  }
 
- // Обновляем заголовок
+ // Обновляем заголовок и информацию
  const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
  document.getElementById('countryName').textContent = countryNameMap[countryId];
+ updateInfoPanel(countryId, year);
+ }
 
- // Обновляем инфо
+ // 4. Функция обновления панели информации
+ function updateInfoPanel(countryId, year) {
+ const infoElement = document.getElementById('countryInfo');
+ const countryData = database[countryId];
+
+ const availableYears = Object.keys(countryData)
+ .map(y => parseInt(y))
+ .sort((a, b) => a - b);
+
+ let closestYear = null;
+ let minDiff = Infinity;
+
+ for (const dataYear of availableYears) {
+ const diff = Math.abs(dataYear - year);
+ if (diff < minDiff) {
+ minDiff = diff;
+ closestYear = dataYear;
+ }
+ }
+
+ if (closestYear !== null) {
+ const data = countryData[closestYear];
+ infoElement.innerHTML = `
+ <p><strong>Информация за ${closestYear} год (ближайшая доступная дата к ${year} году):</strong></p>
+ <p>${data.description}</p>
+ <p>... здесь будет больше данных, таких как флаг, границы и т.д. ...</p>
+ `;
+ } else {
+ infoElement.textContent = `Данные по этой стране на ${year} год пока недоступны.`;
+ }
+ }
+
+ // Инициализация при загрузке страницы
+ selectCountry('russia');
+</script>
+
+</body>
+</html>
