@@ -1,103 +1,88 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Time Traveler Prototype</title>
- <style>
- body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
- .time-slider-container { width: 80%; margin-bottom: 20px; }
- #timeSlider { width: 100%; }
- .map-container { display: flex; justify-content: space-around; width: 60%; margin-bottom: 20px; }
- .country-button { padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; }
- .info-panel { width: 80%; min-height: 150px; padding: 15px; border: 1px solid black; }
- </style>
+<meta charset="UTF-8">
+<title>Time Travel Game</title>
 </head>
-
 <body>
 
- <h1>Путешествие во времени</h1>
+<h2>Выбери страну и год</h2>
 
- <div class="time-slider-container">
- <h2>Шкала времени: <span id="currentYear">2025</span> год</h2>
- <input type="range" id="timeSlider" min="1988" max="2025" value="2025" step="1" oninput="updateTime()">
- </div>
+<!-- Кнопки стран -->
+<button onclick="selectCountry('russia')">Россия</button>
+<button onclick="selectCountry('usa')">США</button>
+<button onclick="selectCountry('china')">Китай</button>
 
- <div class="map-container">
- <button class="country-button" onclick="selectCountry('russia')">Россия</button>
- <button class="country-button" onclick="selectCountry('usa')">США</button>
- <button class="country-button" onclick="selectCountry('china')">Китай</button>
- </div>
+<!-- Поле выбора года -->
+<h3>Год:</h3>
+<input id="yearInput" type="number" min="1900" max="2100" value="2025" step="1" oninput="updateTime()">
 
- <div class="info-panel">
- <h2 id="countryName">Выберите страну</h2>
- <p id="countryInfo"></p>
- </div>
+<!-- Панель информации -->
+<h2 id="countryName"></h2>
+<div id="countryInfo"></div>
 
 <script>
+// "База данных" с примерными данными
 const database = {
- russia: {
- 1990: { description: "Конец эпохи СССР. Экономика охвачена дефицитом, внедряются либеральные реформы Перестройки. Растут националистические настроения в республиках, начинается 'парад суверенитетов'. Государство балансирует на грани распада." },
- 2000: { description: "Начало президентства Владимира Путина. Страна стремится к стабилизации после хаоса 90-х. Проходит Вторая чеченская кампания. Рост мировых цен на нефть начинает укреплять федеральный бюджет и восстанавливать социальную сферу." },
- 2025: { description: "Современное состояние в условиях масштабных геополитических конфликтов и санкций. Акцент на импортозамещении и развитии собственных технологий (IT, ВПК). Демографические вызовы и адаптация экономики к новым реалиям." }
- },
- usa: {
- 1990: { description: "Период после окончания Холодной войны. США утверждают свою роль единственной сверхдержавы. Операция 'Буря в пустыне' в Персидском заливе. Начало взрывного роста персональных компьютеров и зарождение коммерческого Интернета." },
- 2000: { description: "Эпоха после краха 'доткомов' и спорных выборов президента Буша. Теракты 11 сентября 2001 года навсегда меняют вне
-шнюю политику: начинается 'Война с террором' в Афганистане и Ираке. Усиление внутренней безопасности." },
- 2025: { description: "Высокая степень политической поляризации и социальных разногласий. Масштабные инвестиции в развитие искусственного интеллекта (ИИ) и 'зеленую' энергетику. Продолжается технологическое и экономическое соперничество с Китаем." }
- },
- china: {
- 1990: { description: "Продолжение политики 'реформ и открытости' после событий 1989 года. Фокус на развитии особых экономических зон (ОЭЗ) для привлечения иностранных инвестиций. Активная урбанизация и быстрый рост прибрежных провинций." },
- 2000: { description: "Ключевой год: вступление Китая во Всемирную торговую организацию (ВТО). Это дало толчок к беспрецедентному экономическому росту, превратив страну в 'мировую фабрику'. Миллионы людей выходят из бедности." },
- 2025: { description: "Эпоха Си Цзиньпина. Страна переходит от количественного роста к качественному (Made in China 2025). Жесткий контроль над IT-сектором и укрепление центральной власти. Растет напряженность вокруг Тайваня и в Южно-Китайском море." }
- }
+  russia: {
+    2020: { description: "Россия в 2020 году: события, технологии, культура." },
+    2025: { description: "Россия в 2025 году: развитие ИИ, новые города." }
+  },
+  usa: {
+    2020: { description: "США в 2020 году: пандемия, выборы, технологии." },
+    2025: { description: "США в 2025 году: космос, инновации, устойчивое развитие." }
+  },
+  china: {
+    2020: { description: "Китай в 2020 году: рост экономики, цифровизация." },
+    2025: { description: "Китай в 2025 году: лидер в робототехнике и ИИ." }
+  }
 };
 
-let selectedCountryId = null;
+// Текущая выбранная страна
+let currentCountry = 'russia';
 
-function updateTime() {
- const year = document.getElementById('timeSlider').value;
- document.getElementById('currentYear').textContent = year;
- if (selectedCountryId) {
- updateInfoPanel(selectedCountryId, parseInt(year));
- }
-}
-
-function selectCountry(countryId) {
- selectedCountryId = countryId;
- const year = parseInt(document.getElementById('timeSlider').value);
- updateInfoPanel(countryId, year);
-}
-
+// Обновление панели информации
 function updateInfoPanel(countryId, year) {
- const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
- document.getElementById('countryName').textContent = countryNameMap[countryId];
+  const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
+  document.getElementById('countryName').textContent = countryNameMap[countryId];
 
- const infoElement = document.getElementById('countryInfo');
- const countryData = database[countryId];
- const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((a, b) => a - b);
+  const infoElement = document.getElementById('countryInfo');
+  const countryData = database[countryId];
+  const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((a, b) => a - b);
 
- let closestYear = null;
- let min
-Diff = Infinity;
+  let closestYear = null;
+  let minDiff = Infinity;
 
- for (const dataYear of availableYears) {
- const diff = Math.abs(dataYear - year);
- if (diff < minDiff) {
-  minDiff = diff;
-  closestYear = dataYear;
- }
- }
+  for (const dataYear of availableYears) {
+    const diff = Math.abs(dataYear - year);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestYear = dataYear;
+    }
+  }
 
- if (closestYear !== null) {
- const data = countryData[closestYear];
- infoElement.innerHTML = `<p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>`;
- } else {
- infoElement.textContent = "Данные недоступны.";
- }
+  if (closestYear !== null) {
+    const data = countryData[closestYear];
+    infoElement.innerHTML = <p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>;
+  } else {
+    infoElement.textContent = "Данные недоступны.";
+  }
 }
 
+// Функция выбора страны
+function selectCountry(countryId) {
+  currentCountry = countryId;
+  const year = parseInt(document.getElementById('yearInput').value);
+  updateInfoPanel(countryId, year);
+}
+
+// Функция обновления при изменении года
+function updateTime() {
+  const year = parseInt(document.getElementById('yearInput').value);
+  updateInfoPanel(currentCountry, year);
+}
+
+// Запускаем при загрузке
 selectCountry('russia');
 updateTime();
 </script>
