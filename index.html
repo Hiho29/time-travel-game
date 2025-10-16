@@ -1,53 +1,115 @@
+Котик🍀🌻, [16.10.2025 12:37]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Time Travel Game</title>
+<title>История стран по годам</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1a1a1a;
+    color: #f0f0f0;
+    text-align: center;
+    padding: 30px;
+  }
+
+  button {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: #555;
+  }
+
+  input {
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+  }
+
+  #countryInfo {
+    margin-top: 30px;
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #countryName {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+</style>
 </head>
 <body>
 
 <h2>Выбери страну и год</h2>
 
-<!-- Кнопки стран -->
+<!-- Кнопки выбора страны -->
 <button onclick="selectCountry('russia')">Россия</button>
 <button onclick="selectCountry('usa')">США</button>
 <button onclick="selectCountry('china')">Китай</button>
 
-<!-- Поле выбора года -->
+<!-- Поле для выбора года -->
 <h3>Год:</h3>
 <input id="yearInput" type="number" min="1900" max="2100" value="2025" step="1" oninput="updateTime()">
 
-<!-- Панель информации -->
+<!-- Панель отображения информации -->
 <h2 id="countryName"></h2>
 <div id="countryInfo"></div>
 
 <script>
-// "База данных" с примерными данными
+// --- "База данных" событий по странам ---
 const database = {
   russia: {
-    2020: { description: "Россия в 2020 году: события, технологии, культура." },
-    2025: { description: "Россия в 2025 году: развитие ИИ, новые города." }
+    2000: { description: "Россия в 2000 году: начало нового тысячелетия, экономические реформы." },
+    2010: { description: "Россия в 2010 году: рост технологий и культуры." },
+    2020: { description: "Россия в 2020 году: пандемия, цифровизация, дистанционное образование." },
+    2025: { description: "Россия в 2025 году: развитие искусственного интеллекта и новых городов." }
   },
   usa: {
-    2020: { description: "США в 2020 году: пандемия, выборы, технологии." },
-    2025: { description: "США в 2025 году: космос, инновации, устойчивое развитие." }
+    2000: { description: "США в 2000 году: развитие интернета и технологий." },
+    2010: { description: "США в 2010 году: становление социальных сетей." },
+    2020: { description: "США в 2020 году: пандемия, выборы и инновации." },
+    2025: { description: "США в 2025 году: полёты на Марс и новые технологии." }
   },
   china: {
-    2020: { description: "Китай в 2020 году: рост экономики, цифровизация." },
-    2025: { description: "Китай в 2025 году: лидер в робототехнике и ИИ." }
+    2000: { description: "Китай в 2000 году: быстрый экономический рост." },
+    2010: { description: "Китай в 2010 году: развитие мегаполисов и промышленности." },
+    2020: { description: "Китай в 2020 году: цифровизация и роботизация." },
+    2025: { description: "Китай в 2025 году: лидер в области искусственного интеллекта." }
   }
 };
 
-// Текущая выбранная страна
+// --- Текущая выбранная страна ---
 let currentCountry = 'russia';
 
-// Обновление панели информации
+// --- Обновление панели информации ---
 function updateInfoPanel(countryId, year) {
   const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
   document.getElementById('countryName').textContent = countryNameMap[countryId];
 
   const infoElement = document.getElementById('countryInfo');
   const countryData = database[countryId];
+
+  if (!countryData) {
+    infoElement.textContent = "Нет данных по этой стране.";
+    return;
+  }
+
   const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((a, b) => a - b);
 
   let closestYear = null;
@@ -69,20 +131,21 @@ function updateInfoPanel(countryId, year) {
   }
 }
 
-// Функция выбора страны
+// --- При выборе страны ---
 function selectCountry(countryId) {
   currentCountry = countryId;
   const year = parseInt(document.getElementById('yearInput').value);
   updateInfoPanel(countryId, year);
 }
 
-// Функция обновления при изменении года
+// --- При изменении года ---
 function updateTime() {
   const year = parseInt(document.getElementById('yearInput').value);
   updateInfoPanel(currentCountry, year);
 }
 
-// Запускаем при загрузке
+Котик🍀🌻,
+// --- Запуск при загрузке страницы ---
 selectCountry('russia');
 updateTime();
 </script>
