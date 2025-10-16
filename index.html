@@ -42,6 +42,7 @@
  -webkit-appearance: none;
  appearance: none;
  background: #55557a; /* Цвет дорожки */
+
  border-radius: 4px;
  cursor: pointer;
  }
@@ -75,7 +76,6 @@
  cursor: pointer; 
  border: none;
  background-color: #4a4e69; /* Серый фон */
-
  color: #e4e4e4;
  border-radius: 8px; 
  transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s; 
@@ -133,7 +133,8 @@
  </div>
 
  <div class="map-container">
- <div class="country-button" onclick="selectCountry('russia')">Россия</div>
+ <
+div class="country-button" onclick="selectCountry('russia')">Россия</div>
  <div class="country-button" onclick="selectCountry('usa')">США</div>
  <div class="country-button" onclick="selectCountry('china')">Китай</div>
  </div>
@@ -145,41 +146,38 @@
  </div>
 
 <script>
- // 1. База данных для прототипа
- // Здесь хранится информация о странах по годам.
-  // 1. База данных для прототипа (РАСШИРЕННАЯ ВЕРСИЯ)
+ // 1. База данных для прототипа (РАСШИРЕННАЯ ВЕРСИЯ)
  // Здесь хранится информация о странах по годам.
  const database = {
  russia: {
- 1990: { description: "Конец эпохи СССР. Экономика охвачена дефицитом, внедряются либеральные реформы Перестройки. Растут националистические настроения в республиках, начинается 'па
-рад суверенитетов'. Государство балансирует на грани распада." },
+ 1990: { description: "Конец эпохи СССР. Экономика охвачена дефицитом, внедряются либеральные реформы Перестройки. Растут националистические настроения в республиках, начинается 'парад суверенитетов'. Государство балансирует на грани распада." },
  2000: { description: "Начало президентства Владимира Путина. Страна стремится к стабилизации после хаоса 90-х. Проходит Вторая чеченская кампания. Рост мировых цен на нефть начинает укреплять федеральный бюджет и восстанавливать социальную сферу." },
  2025: { description: "Современное состояние в условиях масштабных геополитических конфликтов и санкций. Акцент на импортозамещении и развитии собственных технологий (IT, ВПК). Демографические вызовы и адаптация экономики к новым реалиям." }
  },
  usa: {
  1990: { description: "Период после окончания Холодной войны. США утверждают свою роль единственной сверхдержавы. Операция 'Буря в пустыне' в Персидском заливе. Начало взрывного роста персональных компьютеров и зарождение коммерческого Интернета." },
  2000: { description: "Эпоха после краха 'доткомов' и спорных выборов президента Буша. Теракты 11 сентября 2001 года навсегда меняют внешнюю политику: начинается 'Война с террором' в Афганистане и Ираке. Усиление внутренней безопасности." },
- 2025: { description: "Высокая степень политической поляризации и социальных разногласий. Масштабные инвестиции в развитие искусственного интеллекта (ИИ) и 'зеленую' энергетику. Продолжается технологическое и экономическое соперничество с Китаем." }
+ 2025: { description: "Высокая степень политической поляризации и социальных разногласий. Масштабные инвестиции в развитие искусствен
+ного интеллекта (ИИ) и 'зеленую' энергетику. Продолжается технологическое и экономическое соперничество с Китаем." }
  },
  china: {
  1990: { description: "Продолжение политики 'реформ и открытости' после событий 1989 года. Фокус на развитии особых экономических зон (ОЭЗ) для привлечения иностранных инвестиций. Активная урбанизация и быстрый рост прибрежных провинций." },
  2000: { description: "Ключевой год: вступление Китая во Всемирную торговую организацию (ВТО). Это дало толчок к беспрецедентному экономическому росту, превратив страну в 'мировую фабрику'. Миллионы людей выходят из бедности." },
- 2025: { description: "Эпоха Си Цзиньпина. Страна переходит от количественного роста к качественному (Made in China 2025). Жесткий контроль над IT-сектором и укреплен
-ие центральной власти. Растет напряженность вокруг Тайваня и в Южно-Китайском море." }
+ 2025: { description: "Эпоха Си Цзиньпина. Страна переходит от количественного роста к качественному (Made in China 2025). Жесткий контроль над IT-сектором и укрепление центральной власти. Растет напряженность вокруг Тайваня и в Южно-Китайском море." }
  }
  };
 
+ let selectedCountryId = null;
 
  // 2. Функция обновления времени
  function updateTime() {
  const year = document.getElementById('timeSlider').value;
  document.getElementById('currentYear').textContent = year;
 
- // Обновляем информацию, если страна выбрана
  if (selectedCountryId) {
-  updateInfoPanel(selectedCountryId, parseInt(year));
+ updateInfoPanel(selectedCountryId, parseInt(year));
  } else {
-  document.getElementById('countryInfo').textContent = "Выберите страну, чтобы увидеть информацию за " + year + " год.";
+ document.getElementById('countryInfo').textContent = "Выберите страну, чтобы увидеть информацию за " + year + " год.";
  }
  }
 
@@ -188,66 +186,18 @@
  selectedCountryId = countryId;
  const year = parseInt(document.getElementById('timeSlider').value);
 
- // --- НОВЫЙ КОД ДЛЯ ДИЗАЙНА: Управление активным классом ---
- // Снимаем класс 'active' со всех кнопок
+ // Управление активным классом для дизайна
  document.querySelectorAll('.country-button').forEach(button => {
-  button.classList.remove('active');
+ button.classList.remove('active');
  });
- // Добавляем класс 'active' только к выбранной кнопке
- // Находим кнопку по ее onclick атрибуту, который содержит countryId
- const selectedButton = do
-cument.querySelector(`[onclick="selectCountry('${countryId}')"]`);
- if (selectedButton) {
-  selectedButton.classList.add('active');
- }
- // --- КОНЕЦ НОВОГО КОДА ---
 
- // Обновляем заголовок, показывая, какая страна выбрана
+ const selectedButton = document.querySelector(`[onclick="selectCountry('${countryId}')"]`);
+ if (selectedButton) {
+ selectedButton.classList.add('active');
+ }
+
+ // Обновляем заголовок
  const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
  document.getElementById('countryName').textContent = countryNameMap[countryId];
 
- // Обновляем информацию
- updateInfoPanel(countryId, year);
- }
-
- // 4. Функция обновления панели информации
- function updateInfoPanel(countryId, year) {
- const infoElement = document.getElementById('countryInfo');
- const countryData = database[countryId];
-
- // Получаем и сортируем все доступные годы для этой страны (как числа)
- const availableYears = Object.keys(countryData)
-   .map(y => parseInt(y)) // Преобразуем строки-годы в числа
-   .sort((a, b) => a - b); // Сортируем по возрастанию
-
- // Ищем ближайший доступный год
- let closestYear = null;
- let minDiff = Infinity;
-
- for (const dataYear of availableYears) {
-  const diff = Math.abs(dataYear - year);
-  if (diff < minDiff) {
-  minDiff = diff;
-  closestYear = dataYear;
-  }
- }
-
- // Если данные найдены, показываем их
- if (closestYear !== null) {
-  const data = countryData[closestYear];
-  infoElement.innerHTML = `
-  <p><strong>Информация за ${closestYear} год (ближайшая доступная дата к ${year} году):</strong></p>
-  <p>${data.description}</p>
-  <p>... здесь будет больше данных, таких как флаг, границы и т.д. ...</p>
-  `;
- } else {
-  infoElement.textContent = `Данные по этой стране на ${year} год пока недоступны.`;
- }
- }
-
- // Инициализация при загрузке страницы
- selectCountry('russia'); // Установим Россию по умолчанию
-</script>
-
-</body>
-</html>
+ // Обновляем инфо
