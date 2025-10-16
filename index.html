@@ -5,236 +5,109 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Time Traveler Prototype</title>
  <style>
- /* Общие настройки */
- body { 
- font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
- display: flex; 
- flex-direction: column; 
- align-items: center; 
- padding: 30px; 
- background-color: #1a1a2e; /* Темный фон */
- color: #e4e4e4; /* Светлый текст */
- margin: 0;
- }
-
- /* Контейнер для ползунка */
- .time-slider-container { 
- width: 90%; 
- max-width: 800px;
- margin-bott
-om: 40px; 
- padding: 25px; 
- background-color: #2c2c54; /* Чуть светлее фон */
- border-radius: 12px; 
- box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); 
- }
-
- /* Заголовок шкалы времени */
- h2 { 
- color: #84a9ff; /* Голубой акцент */
- text-align: center;
- margin-top: 0;
- }
-
- /* Ползунок */
- #timeSlider { 
- width: 100%; 
- height: 8px;
- -webkit-appearance: none;
- appearance: none;
- background: #55557a; /* Цвет дорожки */
- border-radius: 4px;
- cursor: pointer;
- }
- /* Кружок ползунка */
- #timeSlider::-webkit-slider-thumb {
- -webkit-appearance: none;
- appearance: none;
- width: 20px;
- height: 20px;
- border-radius: 50%;
- background: #84a9ff;
- cursor: pointer;
- box-shadow: 0 0 5px #84a9ff;
- transition: background-color 0.2s;
- }
-
- /* Контейнер кнопок */
- .map-container { 
- display: flex; 
- width: 90%; 
- max-width: 800px;
- justify-content: space-around; 
- margin-bottom: 30px; 
- gap: 10px;
- }
-
- /* Кнопки стран */
- .country-button { 
- flex-grow: 1;
- padding: 12px 25px; 
- cursor: pointer; 
- border: none;
- background-color: #4a4e69; /* Серый фон */
- color: #e4e4e4;
- border-radius: 8px; 
- transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s; 
- text-align: center;
- font-size: 16px;
- font-weight: bold;
- letter-spacing: 0.5px;
- }
-
- /* Эффект при наведении */
- .country-button:hover { 
- background-color: #6a6e9a; 
- transform: translateY(-2px);
- box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
- }
-
- /* Активная (выбранная) кнопка */
- .country-button.active {
- background-color: #84a9ff; /* Акцентный голубой */
- color: #1a1a2e;
- box-shadow: 0 0 15px rgba(132, 169, 255, 0.7);
- border: 1px solid #c0caff;
- }
-
- /* Панель информации */
- .info-panel { 
- width: 90%; 
- max-width: 800px;
- min-height: 250px; 
- padding: 30px; 
- border: 1px solid #4a4e69; 
- background-color: #2c2c54; 
- border-radius: 12px; 
- box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
- line-height: 1.6;
- }
-
- .info-panel h2 { 
- color: #fca311; /* Желтый/Оранжевый для заголовка */
- margin-bottom: 15px;
- text-a
-lign: left;
- }
-
- .info-panel p { 
- color: #c4c4c4; 
- font-size: 1.1em;
- }
+ /* Простой и надежный дизайн, который не ломается */
+ body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+ .time-slider-container { width: 80%; margin-bottom: 20px; }
+ #timeSlider { width: 100%; }
+ .map-container { display: flex; justify-content: space-around; width: 60%; margin-bottom: 20px; }
+ .country-button { padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; }
+ .info-panel { width: 80%; min-height: 150px; padding: 15px; border: 1px solid black; }
  </style>
 </head>
 <body>
 
+ <h1>Путешествие во времени</h1>
+
  <div class="time-slider-container">
- <h2>Шкала времени: <span id="currentYear">2025</span> год</h2>
+ <h2>Шкала времени: <span id="currentY
+ear">2025</span> год</h2>
  <input type="range" id="timeSlider" min="1988" max="2025" value="2025" step="1" oninput="updateTime()">
  </div>
 
  <div class="map-container">
- <div class="country-button" onclick="selectCountry('russia')">Россия</div>
- <div class="country-button" onclick="selectCountry('usa')">США</div>
- <div class="country-button" onclick="selectCountry('china')">Китай</div>
+ <button class="country-button" onclick="selectCountry('russia')">Россия</button>
+ <button class="country-button" onclick="selectCountry('usa')">США</button>
+ <button class="country-button" onclick="selectCountry('china')">Китай</button>
  </div>
 
  <div class="info-panel">
- <h2>Информация</h2>
- <p id="countryName">Выберите страну и год.</p>
+ <h2 id="countryName">Выберите страну</h2>
  <p id="countryInfo"></p>
  </div>
 
 <script>
- // 1. База данных для прототипа (РАСШИРЕННАЯ ВЕРСИЯ)
- const database = {
- russia: {
- 1990: { description: "Конец эпохи СССР. Экономика охвачена дефицитом, внедряются либеральные реформы Перестройки. Растут националистические настроения в республиках, начинается 'парад суверенитетов'. Государство балансирует на грани распада." },
- 2000: { description: "Начало президентства Владимира Путина. Страна стремится к стабилизации после хаоса 90-х. Проходит Вторая чеченская кампания. Рост мировых цен на нефть начинает укреплять федеральный бюджет и восстанавливать социальную сферу." },
- 2025: { description: "Современное состояние в условиях масштабных геополитических конфликтов и санкций. Акцент на импортозамещении и развитии собственных технологий (IT, ВПК). Демографические вызовы и адаптация экономики к новым реалиям." }
- },
- usa: {
- 1990: { description: "Период после окончания Холодной войны. США утверждают свою роль единственной сверхдержавы. Операция 'Буря в пустыне' в Персидском заливе. Начало взрывного роста персональных компьютеров и зарождение коммерческого Интернета." },
- 2000: { d
-escription: "Эпоха после краха 'доткомов' и спорных выборов президента Буша. Теракты 11 сентября 2001 года навсегда меняют внешнюю политику: начинается 'Война с террором' в Афганистане и Ираке. Усиление внутренней безопасности." },
+// 1. РАСШИРЕННАЯ База данных
+const database = {
+  russia: {
+    1990: { description: "Конец эпохи СССР. Экономика охвачена дефицитом, внедряются либеральные реформы Перестройки. Растут националистические настроения в республиках, начинается 'парад суверенитетов'. Государство балансирует на грани распада." },
+    2000: { description: "Начало президентства Владимира Путина. Страна стремится к стабилизации после хаоса 90-х. Проходит Вторая чеченская кампания. Рост мировых цен на нефть начинает укреплять федеральный бюджет и восстанавливать социальную сферу." },
+    2025: { description: "Современное состояние в условиях масштабных геополитических конфликтов и санкций. Акцент на импортозамещении и развитии собственных технологий (IT, ВПК). Демографические вызовы и адаптация экономики к новым реалиям." }
+  },
+  usa: {
+    1990: { description: "Период после окончания Холодной войны. США утверждают свою роль единственной сверхдержавы. Операция 'Буря в пустыне' в Персидском заливе. Начало взрывного роста персональных компьютеров и зарождение коммерческого Интернета." },
+    2000: { description: "Эпоха после краха 'доткомов' и спорных выборов президента Буша. Теракты 11 сентября 2001 года навсегда меняют внешнюю политику: начинается 'Война с террором' в Афганистане и Ираке. Усиление внутренней безопасности." },
  2025: { description: "Высокая степень политической поляризации и социальных разногласий. Масштабные инвестиции в развитие искусственного интеллекта (ИИ) и 'зеленую' энергетику. Продолжается технологическое и экономическое соперничество с Китаем." }
- },
- china: {
- 1990: { description: "Продолжение политики 'реформ и открытости' после событий 1989 года. Фокус на развитии особых экономических зон (ОЭЗ) для привлечения иностранных инвестиций. Активная урбанизация и быстрый рост прибрежных провинций." },
- 2000: { description: "Ключевой год: вступление Китая во Всемирную торговую организацию (ВТО). Это дало толчок к беспрецедентному экономическому росту, превратив страну в 'мировую фабрику'. Миллионы людей выходят из бедности." },
- 2025: { description: "Эпоха Си Цзиньпина. Страна переходит от количественного роста к качественному (Made in China 2025). Жесткий контроль над IT-сектором и укрепление центральной власти. Растет напряженность вокруг Тайваня и в Южно-Китайском море." }
- }
- };
+  },
+  china: {
+    1990: { description: "Продолжение политики 'реформ и открытости' после событий 1989 года. Фокус на развитии особых экономических зон (ОЭЗ) для привлечения иностранных инвестиций. Активная урбанизация и быстрый рост прибрежных провинций." },
+    2000: { description: "Ключевой год: вступление Китая во Всемирную торговую организацию (ВТО). Это дало толчок к беспрецедентному экономическому росту, превратив страну в 'мировую фабрику'. Миллионы людей выходят из бедности." },
+    2025: { description: "Эпоха Си Цзиньпина. Страна переходит от количественного роста к качественному (Made in China 2025). Жесткий контроль над IT-сектором и укрепление центральной власти. Растет напряженность вокруг Тайваня и в Южно-Китайском море." }
+  }
+};
 
- let selectedCountryId = null;
+let selectedCountryId = null;
 
- // 2. Функция обновления времени
- function updateTime() {
- const year = document.getElementById('timeSlider').value;
- document.getElementById('currentYear').textContent = year;
+// 2. Функция обновления времени
+function updateTime() {
+  const year = document.getElementById('timeSlider').value;
+  document.getElementById('currentYear').textContent = year;
+  if (selectedCountryId) {
+    updateInfoPanel(selectedCountryId, parseInt(year));
+  }
+}
 
- if (selectedCountryId) {
- updateInfoPanel(selectedCountryId, parseInt(year));
- } else {
- document.getElementById('countryInfo').textContent = "Выберите страну, чтобы увидеть информацию за " + year + " год.";
- }
- }
+// 3. Функция выбора страны (ПРОСТАЯ ВЕРСИЯ БЕЗ ДИЗАЙНА)
+function selectCountry(countryId) {
+  selectedCountryId = countryId;
+  const year = parseInt(document.getElementById('timeSlider').value);
+  updateInfoPanel(countryId, year);
+}
 
- // 3. Функция выбора страны
- function selectCountry(countryId) {
- selectedCountryId = countryId;
- const year = parseInt(document.getElementById('timeSlider').value);
+// 4. Функция обновления панели информации
+function updateInfoPanel(countryId, year) {
+  const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
+  document.getElementById('countryName').textContent = countryNameMap[countryId];
 
- // Управление активным классом для дизайна
- document.querySelectorAll('.country-button').forEach(button => {
- button.classList.remove('active');
- });
+  const infoElement = document.getElementById('countryInfo');
+  const countryData = database[countryId];
+  const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((
+a, b) => a - b);
 
- const selectedButton = document.querySelector(`[onclick="selectCountry('${countryId}')"]`);
- if (selectedButton) {
- selectedButton.classList.add('active');
- }
+  let closestYear = null;
+  let minDiff = Infinity;
 
- // Обновляем заголовок и информацию
- const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
- document.getElementById('countryName').textContent = countryNameMap[countryId];
- updateInfoPanel(countryId, year);
- }
+  for (const dataYear of availableYears) {
+    const diff = Math.abs(dataYear - year);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestYear = dataYear;
+    }
+  }
 
- // 4. Функция обновления панели информации
- function updateInfoPanel(countryId, year) {
- const infoElement = document.getElementById('countryInfo');
- const countryData = database[countryId];
+  if (closestYear !== null) {
+    const data = countryData[closestYear];
+    infoElement.innerHTML = `
+      <p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p>
+      <p>${data.description}</p>`;
+  } else {
+    infoElement.textContent = "Данные недоступны.";
+  }
+}
 
- const availableYears = Object.keys(countryData)
- .map(y => parseInt(y))
- .sort((a, b) => a - b);
+// Запускаем всё при загрузке
+selectCountry('russia');
+updateTime();
 
- let closestYear = null;
- let minDiff = Infinity;
-
- for (const dataYear of availableYears) {
- const diff = Math.abs(dataYear - year);
- if (diff < minDiff) {
- minDiff = diff;
- closestYear = dataYear;
- }
- }
-
- if (closestYear !== null) {
- const data = countryData[closestYear];
- infoElement.innerHTML = `
- <p><strong>Информация за ${closestYear} год (ближайшая доступная дата к ${year} году):</strong></p>
- <p>${data.description}</p>
- <p>... здесь будет больше данных, таких как флаг, границы и т.д. ...</p>
- `;
- } else {
- infoElement.textContent = `Данные по этой стране на ${year} год пока недоступны.`;
- }
- }
-
- // Инициализация при загрузке страницы
- selectCountry('russia');
 </script>
 
 </body>
