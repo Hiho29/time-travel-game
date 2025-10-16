@@ -39,9 +39,7 @@ solid #3498db; background-color: #ecf0f1; border-radius: 8px; }
 <script>
  // 1. База данных для прототипа
  // Здесь хранится информация о странах по годам.
- const database = {
- russia: {
-  1990: { description: "СССР на пороге распада. Экономическая нестабильность, начало демократических реформ." },
+ const database = {ческая нестабильность, начало демократических реформ." },
   2000: { description: "Начало эпохи Путина. Экономический рост за счет нефти, укрепление вертикали власти." },
   2025: { description: "Современное состояние. Продолжение развития технологий и геополитической напряженности." }
  },
@@ -75,8 +73,21 @@ solid #3498db; background-color: #ecf0f1; border-radius: 8px; }
  // 3. Функция выбора страны
  function selectCountry(countryId) {
  selectedCountryId = countryId;
- // ИСПРАВЛЕНО: .value теперь в одной строке
  const year = parseInt(document.getElementById('timeSlider').value);
+
+ // --- НОВЫЙ КОД ДЛЯ ДИЗАЙНА: Управление активным классом ---
+ // Снимаем класс 'active' со всех кнопок
+ document.querySelectorAll('.country-button').forEach(button => {
+  button.classList.remove('active');
+ });
+ // Добавляем класс 'active' только к выбранной кнопке
+ // Находим кнопку по ее onclick атрибуту, который содержит countryId
+ const selectedButton = do
+cument.querySelector(`[onclick="selectCountry('${countryId}')"]`);
+ if (selectedButton) {
+  selectedButton.classList.add('active');
+ }
+ // --- КОНЕЦ НОВОГО КОДА ---
 
  // Обновляем заголовок, показывая, какая страна выбрана
  const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
@@ -87,44 +98,42 @@ solid #3498db; background-color: #ecf0f1; border-radius: 8px; }
  }
 
  // 4. Функция обновления панели информации
-function updateInfoPanel(countryId, year) {
+ function updateInfoPanel(countryId, year) {
  const infoElement = document.getElementById('countryInfo');
  const countryData = database[countryId];
 
  // Получаем и сортируем все доступные годы для этой страны (как числа)
  const availableYears = Object.keys(countryData)
-    .map(y => parseInt(y)) // Преобразуем строки-годы в числа
-    .sort((a, b) => a - b); // Сортируем по возрастанию
+   .map(y => parseInt(y)) // Преобразуем строки-годы в числа
+   .sort((a, b) => a - b); // Сортируем по возрастанию
 
  // Ищем ближайший доступный год
  let closestYear = null;
  let minDiff = Infinity;
 
  for (const dataYear of availableYears) {
- const diff = Math.abs(dataYear - year);
- if (diff < minDiff) {
- minDiff = diff;
- closestYear = dataYear;
- }
+  const diff = Math.abs(dataYear - year);
+  if (diff < minDiff) {
+  minDiff = diff;
+  closestYear = dataYear;
+  }
  }
 
  // Если данные найдены, показываем их
  if (closestYear !== null) {
- const data = countryData[closestYear];
- infoElement.innerHTML = `
- <p><strong>Информация за ${closestYear} год (ближайшая доступная дата к ${year} году):</strong></p>
-;
- <p>${data.description}</p>
- <p>... здесь будет больше данных, таких как флаг, границы и т.д. ...</p>
- `;
+  const data = countryData[closestYear];
+  infoElement.innerHTML = `
+  <p><strong>Информация за ${closestYear} год (ближайшая доступная дата к ${year} году):</strong></p>
+  <p>${data.description}</p>
+  <p>... здесь будет больше данных, таких как флаг, границы и т.д. ...</p>
+  `;
  } else {
- infoElement.textContent = `Данные по этой стране на ${year} год пока недоступны.`;
+  infoElement.textContent = `Данные по этой стране на ${year} год пока недоступны.`;
  }
-}
+ }
 
-// Инициализация при загрузке страницы
-selectCountry('russia'); // Установим Россию по умолчанию
-// updateTime(); — эту строку я убрал, так как она не нужна, когда мы сразу вызываем selectCountry
+ // Инициализация при загрузке страницы
+ selectCountry('russia'); // Установим Россию по умолчанию
 </script>
 
 </body>
