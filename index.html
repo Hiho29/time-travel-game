@@ -5,18 +5,19 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Time Traveler Prototype</title>
  <style>
- /* Простой и надежный дизайн, который не ломается */
- body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
- .time-slider-container { width: 80%; margin-bottom: 20px; }
+ body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; background-color: #f4f4f4; }
+ .time-slider-container { width: 80%; margin-bottom: 30px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
  #timeSlider { width: 100%; }
- .map-container { display: flex; justify-content: space-around; width: 60%; margin-bottom: 20px; }
- .country-button { padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; }
- .info-panel { width: 80%; min-height: 150px; padding: 15px; border: 1px solid black; }
+ .map-container { display: flex; width: 80%; justify-content: space-around; margin-bottom: 20px; }
+ .country-button { padding: 10px 20px; margin: 5px; cursor: pointer; border: 1px solid #ccc; background-color: #e9e9e9; border-radius: 4px; transition: background-color 0.2s; }
+ .country-button:hover { background-color: #d1d1d1; }
+ .info-panel { width: 80%; min-height: 200px; padding: 20px; border: 2px
+solid #3498db; background-color: #ecf0f1; border-radius: 8px; }
+ h2 { color: #2c3e50; }
+ p { color: #34495e; }
  </style>
 </head>
 <body>
-
- <h1>Путешествие во времени</h1>
 
  <div class="time-slider-container">
  <h2>Шкала времени: <span id="currentYear">2025</span> год</h2>
@@ -24,91 +25,107 @@
  </div>
 
  <div class="map-container">
- <button class="country-button" onclick="selectCountry('russia')">Россия</button>
- <button class="country-button" onclick="selectCountry('usa')">С
-ША</button>
- <button class="country-button" onclick="selectCountry('china')">Китай</button>
+ <div class="country-button" onclick="selectCountry('russia')">Россия</div>
+ <div class="country-button" onclick="selectCountry('usa')">США</div>
+ <div class="country-button" onclick="selectCountry('china')">Китай</div>
  </div>
 
  <div class="info-panel">
- <h2 id="countryName">Выберите страну</h2>
+ <h2>Информация</h2>
+ <p id="countryName">Выберите страну и год.</p>
  <p id="countryInfo"></p>
  </div>
 
 <script>
-// 1. РАСШИРЕННАЯ База данных
-const database = {
+ // 1. База данных для прототипа
+ // Здесь хранится информация о странах по годам.
+ const database = {
  russia: {
-  1990: { description: "Конец эпохи СССР. Экономика охвачена дефицитом, внедряются либеральные реформы Перестройки. Растут националистические настроения в республиках, начинается 'парад суверенитетов'. Государство балансирует на грани распада." },
-  2000: { description: "Начало президентства Владимира Путина. Страна стремится к стабилизации после хаоса 90-х. Проходит Вторая чеченская кампания. Рост мировых цен на нефть начинает укреплять федеральный бюджет и восстанавливать социальную сферу." },
-  2025: { description: "Современное состояние в условиях масштабных геополитических конфликтов и санкций. Акцент на импортозамещении и развитии собственных технологий (IT, ВПК). Демографические вызовы и адаптация экономики к новым реалиям." }
+  1990: { description: "СССР на пороге распада. Экономическая нестабильность, начало демократических реформ." },
+  2000: { description: "Начало эпохи Путина. Экономический рост за счет нефти, укрепление вертикали власти." },
+  2025: { description: "Современное состояние. Продолжение развития технологий и геополитической напряженности." }
  },
  usa: {
-  1990: { description: "Период после окончания Холодной войны. США утверждают свою роль единственной сверхдержавы. Операция 'Буря в пустыне' в Персидском заливе. Начало взрывного роста персональных компьютеров и зарождение коммерческого Интернета." },
-  2000: { description: "Эпоха после краха 'доткомов' и спорных выборов президента Буша. Теракты 11 сентября 2001 года навсегда меняют внешнюю политику: начинается 'Война с террором' в Афганистане и Ираке. Усиление внутренней безопасности." },
-  2025: { description: "Высокая степень политической поляризации и социальных разногласий. Масштабные инвестиции в развитие искусственного интеллекта (ИИ) и 'зеленую' энергетику. Продолжается технологическое и экономическое соперничество с Китаем." }
+  1990: { description: "Конец Холодной войны. Период экономического подъема и культурного влияния." },
+  2000: { description: "Президентство Буша. Начало войны с терроризмом после событий 11 сентября." },
+  2025: { description: "Современное состояние. Фокус на внутренних политических конфликтах и развитии ИИ." }
  },
  china: {
-  1990: { description: "Продолжение политики 'реформ и открытости' после событий 1989 года. Фокус на развитии особых
-экономических зон (ОЭЗ) для привлечения иностранных инвестиций. Активная урбанизация и быстрый рост прибрежных провинций." },
-  2000: { description: "Ключевой год: вступление Китая во Всемирную торговую организацию (ВТО). Это дало толчок к беспрецедентному экономическому росту, превратив страну в 'мировую фабрику'. Миллионы людей выходят из бедности." },
-  2025: { description: "Эпоха Си Цзиньпина. Страна переходит от количественного роста к качественному (Made in China 2025). Жесткий контроль над IT-сектором и укрепление центральной власти. Растет напряженность вокруг Тайваня и в Южно-Китайском море." }
+  1990: { description: "Активное внедрение экономических реформ и интеграция в мировую торговлю." },
+  2000: { description: "Вступление в ВТО. Ускорение экономического роста, превращение в 'мировую фабрику'." },
+  2025: { description: "Современное состояние. Статус ми
+ровой сверхдержавы, фокус на технологическом суверенитете." }
  }
-};
+ };
 
-let selectedCountryId = null;
+ let selectedCountryId = null;
 
-// 2. Функция обновления времени
-function updateTime() {
+ // 2. Функция обновления времени
+ function updateTime() {
  const year = document.getElementById('timeSlider').value;
  document.getElementById('currentYear').textContent = year;
+
+ // Обновляем информацию, если страна выбрана
  if (selectedCountryId) {
   updateInfoPanel(selectedCountryId, parseInt(year));
+ } else {
+  document.getElementById('countryInfo').textContent = "Выберите страну, чтобы увидеть информацию за " + year + " год.";
  }
-}
+ }
 
-// 3. Функция выбора страны
-function selectCountry(countryId) {
+ // 3. Функция выбора страны
+ function selectCountry(countryId) {
  selectedCountryId = countryId;
+ // ИСПРАВЛЕНО: .value теперь в одной строке
  const year = parseInt(document.getElementById('timeSlider').value);
- updateInfoPanel(countryId, year);
-}
 
-// 4. Функция обновления панели информации
-function updateInfoPanel(countryId, year) {
+ // Обновляем заголовок, показывая, какая страна выбрана
  const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
  document.getElementById('countryName').textContent = countryNameMap[countryId];
 
+ // Обновляем информацию
+ updateInfoPanel(countryId, year);
+ }
+
+ // 4. Функция обновления панели информации
+function updateInfoPanel(countryId, year) {
  const infoElement = document.getElementById('countryInfo');
  const countryData = database[countryId];
- const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((a, b) => a - b);
 
+ // Получаем и сортируем все доступные годы для этой страны (как числа)
+ const availableYears = Object.keys(countryData)
+    .map(y => parseInt(y)) // Преобразуем строки-годы в числа
+    .sort((a, b) => a - b); // Сортируем по возрастанию
+
+ // Ищем ближайший доступный год
  let closestYear = null;
  let minDiff = Infinity;
 
  for (const dataYear of availableYears) {
-  const diff = Math.abs(dataYear - year);
-  if (diff < minDiff) {
-   minDiff = diff;
-   closestYear = dataYear;
-  }
+ const diff = Math.abs(dataYear - year);
+ if (diff < minDiff) {
+ minDiff = diff;
+ closestYear = dataYear;
+ }
  }
 
+ // Если данные найдены, показываем их
  if (closestYear !== null) {
-  const data = countryData[closestYear];
-  infoElement.innerHTML = `
-   <p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong>&l
-t;/p>
-   <p>${data.description}</p>`;
+ const data = countryData[closestYear];
+ infoElement.innerHTML = `
+ <p><strong>Информация за ${closestYear} год (ближайшая доступная дата к ${year} году):</strong></p>
+;
+ <p>${data.description}</p>
+ <p>... здесь будет больше данных, таких как флаг, границы и т.д. ...</p>
+ `;
  } else {
-  infoElement.textContent = "Данные недоступны.";
+ infoElement.textContent = `Данные по этой стране на ${year} год пока недоступны.`;
  }
 }
 
-// Запускаем всё при загрузке
-selectCountry('russia');
-updateTime();
-
+// Инициализация при загрузке страницы
+selectCountry('russia'); // Установим Россию по умолчанию
+// updateTime(); — эту строку я убрал, так как она не нужна, когда мы сразу вызываем selectCountry
 </script>
 
 </body>
