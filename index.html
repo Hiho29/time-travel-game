@@ -74,24 +74,25 @@
 <script>
 // --- "База данных" событий по странам ---
 const database = {
-  russia: {
-    2000: { description: "Россия в 2000 году: начало нового тысячелетия, экономические реформы." },
-    2010: { description: "Россия в 2010 году: рост технологий и культуры." },
-    2020: { description: "Россия в 2020 году: пандемия, цифровизация, дистанционное образование." },
-    2025: { description: "Россия в 2025 году: развитие искусственного интеллекта и новых городов." }
-  },
-  usa: {
-    2000: { description: "США в 2000 году: развитие интернета и технологий." },
-    2010: { description: "США в 2010 году: становление социальных сетей." },
-    2020: { description: "США в 2020 году: пандемия, выборы и инновации." },
-    2025: { description: "США в 2025 году: полёты на Марс и новые технологии." }
-  },
-  china: {
-    2000: { description: "Китай в 2000 году: быстрый экономический рост." },
-    2010: { description: "Китай в 2010 году: развитие мегаполисов и промышленности." },
-    2020: { description: "Китай в 2020 году: цифровизация и роботизация." },
-    2025: { description: "Китай в 2025 году: лидер в области искусственного интеллекта." }
-  }
+ russia: {
+  2000: { description: "Россия в 2000 году: начало нового тысячелетия, экономические реформы." },
+  2010: { description: "Россия в 2010 году: рост технологий и культуры." },
+  2020: { description: "Россия в 2020 году: пандемия, цифровизация, дистанционное образование." },
+  2025: { description: "Россия в 2025 году: развитие искусственного интеллекта и новых городов." }
+ },
+ usa: {
+  2000: { description: "США в 2000 году: развитие интернета и технологий." },
+  2010: { description: "США в 2010 году: становление социальных сетей." },
+  2020: { description: "США в 2020 году: пандемия, выборы и инновации." },
+  2025: { description: "США в 2025 году: полёты на Марс и новые технологии." }
+ },
+ china: {
+  2000: { description: "Китай в 2000 году: быстрый экономический рост." },
+  2010: { des
+cription: "Китай в 2010 году: развитие мегаполисов и промышленности." },
+  2020: { description: "Китай в 2020 году: цифровизация и роботизация." },
+  2025: { description: "Китай в 2025 году: лидер в области искусственного интеллекта." }
+ }
 };
 
 // --- Текущая выбранная страна ---
@@ -99,21 +100,21 @@ let currentCountry = 'russia';
 
 // --- Обновление панели информации ---
 function updateInfoPanel(countryId, year) {
-  const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
-  document.getElementById('countryName').textContent = countryNameMap[countryId];
+ const countryNameMap = { russia: 'Россия', usa: 'США', china: 'Китай' };
+ document.getElementById('countryName').textContent = countryNameMap[countryId];
 
-  const infoElement = document.getElementById('countryInfo');
-  const countryData = database[countryId];
+ const infoElement = document.getElementById('countryInfo');
+ const countryData = database[countryId];
 
-  if (!countryData) {
-    infoElement.textContent = "Нет данных по этой стране.";
-    return;
-  }
+ if (!countryData) {
+  infoElement.textContent = "Нет данных по этой стране.";
+  return;
+ }
 
-  const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((a, b) => a - b);
+ const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((a, b) => a - b);
 
-  let closestYear = null;
-  let minDiff = Infinity;
+ let closestYear = null;
+ let minDiff = Infinity;
 
  for (const dataYear of availableYears) {
   const diff = Math.abs(dataYear - year);
@@ -125,7 +126,6 @@ function updateInfoPanel(countryId, year) {
 
  if (closestYear !== null) {
   const data = countryData[closestYear];
-  // ВОТ ИСПРАВЛЕННАЯ СТРОКА:
   infoElement.innerHTML = `<p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>`;
  } else {
   infoElement.textContent = "Данные недоступны.";
@@ -145,12 +145,11 @@ function updateTime() {
  updateInfoPanel(currentCountry, year);
 }
 
-Котик🍀🌻,
 // --- Запуск при загрузке страницы ---
 selectCountry('russia');
 updateTime();
-</script>
 
 </body>
 </html>
+
 
