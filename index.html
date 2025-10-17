@@ -1,57 +1,56 @@
-Котик🍀🌻, [16.10.2025 12:37]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <title>История стран по годам</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #1a1a1a;
-    color: #f0f0f0;
-    text-align: center;
-    padding: 30px;
-  }
+ body {
+  font-family: Arial, sans-serif;
+  background: #1a1a1a;
+  color: #f0f0f0;
+  text-align: center;
+  padding: 30px;
+ }
 
-  button {
-    background: #333;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+ button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+ }
 
-  button:hover {
-    background: #555;
-  }
+ button:hover {
+  background: #555;
+ }
 
-  input {
-    margin-top: 10px;
-    padding: 5px;
-    border-radius: 5px;
-    border: none;
-    text-align: center;
-  }
+ input {
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+ }
 
-  #countryInfo {
-    margin-top: 30px;
-    background: #222;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #000;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+ #countryInfo {
+  margin-top: 30px;
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+ }
 
-  #countryName {
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 20px;
-  }
+ #countryName {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+ }
 </style>
 </head>
 <body>
@@ -67,7 +66,8 @@
 <h3>Год:</h3>
 <input id="yearInput" type="number" min="1900" max="2100" value="2025" step="1" oninput="updateTime()">
 
-<!-- Панель отображения информации -->
+<!-- Панель от
+ображения информации -->
 <h2 id="countryName"></h2>
 <div id="countryInfo"></div>
 
@@ -88,8 +88,7 @@ const database = {
  },
  china: {
   2000: { description: "Китай в 2000 году: быстрый экономический рост." },
-  2010: { des
-cription: "Китай в 2010 году: развитие мегаполисов и промышленности." },
+  2010: { description: "Китай в 2010 году: развитие мегаполисов и промышленности." },
   2020: { description: "Китай в 2020 году: цифровизация и роботизация." },
   2025: { description: "Китай в 2025 году: лидер в области искусственного интеллекта." }
  }
@@ -117,7 +116,8 @@ function updateInfoPanel(countryId, year) {
  let minDiff = Infinity;
 
  for (const dataYear of availableYears) {
-  const diff = Math.abs(dataYear - year);
+  const diff = Math.abs(dataYear - year
+);
   if (diff < minDiff) {
    minDiff = diff;
    closestYear = dataYear;
@@ -126,6 +126,7 @@ function updateInfoPanel(countryId, year) {
 
  if (closestYear !== null) {
   const data = countryData[closestYear];
+  // ВОТ ПРАВИЛЬНАЯ СТРОКА, С ОБРАТНЫМИ КАВЫЧКАМИ
   infoElement.innerHTML = `<p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>`;
  } else {
   infoElement.textContent = "Данные недоступны.";
@@ -148,8 +149,7 @@ function updateTime() {
 // --- Запуск при загрузке страницы ---
 selectCountry('russia');
 updateTime();
+</script>
 
 </body>
 </html>
-
-
