@@ -1,56 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <title>История стран по годам</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
  body {
-  font-family: Arial, sans-serif;
-  background: #1a1a1a;
-  color: #f0f0f0;
-  text-align: center;
-  padding: 30px;
+ font-family: Arial, sans-serif;
+ background: #1a1a1a;
+ color: #f0f0f0;
+ text-align: center;
+ padding: 30px;
  }
 
  button {
-  background: #333;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
+ background: #333;
+ color: white;
+ border: none;
+ padding: 10px 20px;
+ margin: 5px;
+ border-radius: 10px;
+ cursor: pointer;
+ transition: 0.2s;
  }
 
  button:hover {
-  background: #555;
+ background: #555;
+ }
+
+ /* Стиль для активной кнопки */
+ button.active {
+ background: #007bff; 
+ box-shadow: 0 0 10px #007bff;
  }
 
  input {
-  margin-top: 10px;
-  padding: 5px;
-  border-radius: 5px;
-  border: none;
-  text-align: center;
+ margin-top: 10px;
+ padding: 5px;
+ border-radius: 5px;
+ border: none;
+ text-align: center;
  }
 
  #countryInfo {
-  margin-top: 30px;
-  background: #222;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #000;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+ margin-top: 30px;
+ background: #222;
+ padding: 20px;
+ border-radius: 10px;
+ box-shadow: 0 0 10px #000;
+ max-width: 500px;
+ margin-left: auto;
+ margin-right: auto;
  }
 
  #countryName {
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 20px;
+ font-size: 24px;
+ font-weight: bold;
+ margin-top: 20px;
+ }
+
+ /* Стили для мобильных телефонов */
+ @media (max-width: 600px) {
+ body {
+  padding: 15px; 
+ }
+
+ h2 {
+  font-size: 22px; 
+ }
+
+ #countryName {
+  font-size: 20px; 
+ }
+
+ button {
+  padding: 12px 15px; 
+ }
+
+ #countryInfo {
+  padding: 15px; 
+ }
  }
 </style>
 </head>
@@ -59,16 +88,15 @@
 <h2>Выбери страну и год</h2>
 
 <!-- Кнопки выбора страны -->
-<button onclick="selectCountry('russia')">Россия</button>
+<button onclick="selectCountry('russia')">Россия</button&gt;
 <button onclick="selectCountry('usa')">США</button>
 <button onclick="selectCountry('china')">Китай</button>
 
-<!-- Поле для выбора года -->
+<!-- Поле для выбора года (min 1300, max 2025 - исправлено) -->
 <h3>Год:</h3>
-<input id="yearInput" type="number" min="1900" max="2100" value="2025" step="1" oninput="updateTime()">
+<input id="yearInput" type="number" min="1300" max="2025" value="2025" step="1" oninput="updateTime()">
 
-<!-- Панель от
-ображения информации -->
+<!-- Панель отображения информации -->
 <h2 id="countryName"></h2>
 <div id="countryInfo"></div>
 
@@ -77,35 +105,34 @@
 const database = {
  russia: {
  1380: { description: "Куликовская битва. Важная победа русских войск под предводительством Дмитрия Донского." },
-  1703: { description: "Основание Санкт-Петербурга. Пётр I заложил новую столицу Российской империи." },
-  1812: { description: "Отечественная война 1812 года. Вторжение Наполеона в Россию и его последующее поражение." },
-  1917: { description: "Русская революция. Падение монархии и приход к власти большевиков." },
-  1945: { description: "Победа в Великой Отечественной войне. Окончание самой кровопролитной войны в истории страны." },
-  1961: { description: "Первый полёт человека в космос. Юрий Гагарин на корабле 'Восток-1' облетел Землю." },
-  1991: { description: "Распад СССР. Образование Российской Федерации как независимого государства." },
-  2000: { description: "Начало нового тысячелетия, экономические реформы." },
-  2010: { description: "Рост технологий и культуры, развитие интернета в регионах." },
-  2020: { description: "Пандемия, цифровизация, массовый переход на дистанционную работу и образование." }
+ 1703: { description: "Основание Санкт-Петербурга. Пётр I заложил новую столицу Российской империи." },
+ 1812: { description: "Отечественная война 1812 года. Вторжение Наполеона в Россию и его последующее поражение." },
+ 1917: { description: "Русская революция. Падение монархии и приход к власти большевиков." },
+ 1945: { description: "Победа в Великой Отечественной войне. Окончание самой кровопролитной войны в истории страны." },
+ 1961: { description: "Первый полёт человека в космос. Юрий Гагарин на корабле 'Восток-1' облетел Землю." },
+ 1991: { description: "Распад СССР. Образование Российской Федерации как независимого государства." },
+ 2000: { description: "Начало нового тысячелетия, экономические реформы." },
+ 2010: { description: "Рост технологий и культуры, развитие интернета в регионах." },
+ 2020: { description: "Пандемия, цифровизация, массовый переход на дистанционную работу и образование." }
  },
  usa: {
-  1492: { description: "Христофор Колумб открывает Америку. Начало эпохи Великих географических открытий." },
-  1776: { description: "Принятие Декларации независимости. Основание Соединённых Штатов Америки." },
-  1865: { description: "Окончание Гражданской войны. Отмена рабства и сохранение единства страны." },
-  1929: { description: "Начало Великой депрессии. Крупнейший экономическийризис в истории." },
-  1969: { description: "Высадка на Луну. Нил Армстронг становится первым человеком, ступившим на лунную поверхность." },
-  2001: { description: "Террористические атаки 11 сентября. Серия скоординированных атак на башни-близнецы и Пентагон." },
-  2008: { description: "Избрание Барака Обамы. Первый афроамериканец на посту президента США." },
-  2020: { description: "Пандемия, выборы и массовые движения за гражданские права." }
+ 1492: { description: "Христофор Колумб открывает Америку. Начало эпохи Великих географических открытий." },
+ 1776: { description: "Принятие Декларации независимости. Основание Соединённых Штатов Америки." },
+ 1865: { description: "Окончание Гражданской войны. Отмена рабства и сохранение единства страны." },
+ 1929: { description: "Начало Великой депрессии. Крупнейший экономический кризис в истории." },
+ 1969: { description: "Высадка на Луну. Нил Армстронг становится первым человеком, ступившим на лунную поверхность." },
+ 2001: { description: "Террористические атаки 11 сентября. Серия скоординированных атак на башни-близнецы и Пентагон." },
+ 2008: { description: "Избрание Барака Обамы. Первый афроамериканец на посту президента США." },
+ 2020: { description: "Пандемия, выборы и массовые движения за гражданские права." }
  },
-
-china: {
-   1368: { description: "Основание династии Мин. Изгнание монголов и восстановление китайской государственности." },
-  1420: { description: "Завершение строительства Запретного города в Пекине, который стал резиденцией императоров." },
-  1839: { description: "Начало Первой опиумной войны. Конфликт с Великобританией, оказавший огромное влияние на историю Китая." },
-  1949: { description: "Образование Китайской Народной Республики (КНР) во главе с Мао Цзэдуном." },
-  1978: { description: "Начало политики 'реформ и открытости'. Дэн Сяопин инициирует экономические реформы, которые привели к 'китайскому чуду'." },
-  2008: { description: "Олимпийские игры в Пекине. Китай демонстрирует миру свои экономические и технологические достижения." },
-  2020: { description: "Активная борьба с пандемией, развитие цифровых технологий и искусственного интеллекта." }
+ china: {
+ 1368: { description: "Основание династии Мин. Изгнание монголов и восстановление китайской государственности." },
+ 1420: { description: "Завершение строительства Запретного города в Пекине, который стал резиденцией императоров." },
+ 1839: { description: "Начало Первой опиумной войны. Конфликт с Великобританией, оказавший огромное влияние на историю Китая." },
+ 1949: { description: "Образование Китайской Народной Республики (КНР) во главе с Мао Цзэдуном." },
+ 1978: { description: "Начало политики 'реформ и открытости'. Дэн Сяопин инициирует экономические реформы, которые привели к 'китайскому чуду'." },
+ 2008: { description: "Олимпийские игры в Пекине. Китай демонстрирует миру свои экономические и технологические достижения." },
+ 2020: { description: "Активная борьба с пандемией, развитие цифровых технологий и искусственного интеллекта." }
  }
 };
 
@@ -120,9 +147,17 @@ function updateInfoPanel(countryId, year) {
  const infoElement = document.getElementById('countryInfo');
  const countryData = database[countryId];
 
+ // Логика для подсветки активной кнопки
+ document.querySelectorAll('button').forEach(btn => {
+ btn.classList.remove('active');
+ if (btn.getAttribute('onclick').includes(countryId)) {
+  btn.classList.add('active');
+ }
+ });
+
  if (!countryData) {
-  infoElement.textContent = "Нет данных по этой стране.";
-  return;
+ infoElement.textContent = "Нет данных по этой стране.";
+ return;
  }
 
  const availableYears = Object.keys(countryData).map(y => parseInt(y)).sort((a, b) => a - b);
@@ -131,20 +166,19 @@ function updateInfoPanel(countryId, year) {
  let minDiff = Infinity;
 
  for (const dataYear of availableYears) {
-  const diff = Math.abs(dataYear - year
-);
-  if (diff < minDiff) {
-   minDiff = diff;
-   closestYear = dataYear;
-  }
+ const diff = Math.abs(dataYear - year);
+ if (diff < minDiff) {
+  minDiff = diff;
+  closestYear = dataYear;
+ }
  }
 
  if (closestYear !== null) {
-  const data = countryData[closestYear];
-  // ВОТ ПРАВИЛЬНАЯ СТРОКА, С ОБРАТНЫМИ КАВЫЧКАМИ
-  infoElement.innerHTML = <p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>;
+ const data = countryData[closestYear];
+ // ИСПРАВЛЕННАЯ СТРОКА С ОБРАТНЫМИ КАВЫЧКАМИ
+ infoElement.innerHTML = `<p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>`;
  } else {
-  infoElement.textContent = "Данные недоступны.";
+ infoElement.textContent = "Данные недоступны.";
  }
 }
 
@@ -168,3 +202,6 @@ updateTime();
 
 </body>
 </html>
+
+
+
