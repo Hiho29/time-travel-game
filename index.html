@@ -115,33 +115,34 @@ function updateInfoPanel(countryId, year) {
   let closestYear = null;
   let minDiff = Infinity;
 
-  for (const dataYear of availableYears) {
-    const diff = Math.abs(dataYear - year);
-    if (diff < minDiff) {
-      minDiff = diff;
-      closestYear = dataYear;
-    }
+ for (const dataYear of availableYears) {
+  const diff = Math.abs(dataYear - year);
+  if (diff < minDiff) {
+   minDiff = diff;
+   closestYear = dataYear;
   }
+ }
 
-  if (closestYear !== null) {
-    const data = countryData[closestYear];
-    infoElement.innerHTML = <p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>;
-  } else {
-    infoElement.textContent = "Данные недоступны.";
-  }
+ if (closestYear !== null) {
+  const data = countryData[closestYear];
+  // ВОТ ИСПРАВЛЕННАЯ СТРОКА:
+  infoElement.innerHTML = `<p><strong>Информация за ${closestYear} год (ближайшая к ${year}):</strong></p><p>${data.description}</p>`;
+ } else {
+  infoElement.textContent = "Данные недоступны.";
+ }
 }
 
 // --- При выборе страны ---
 function selectCountry(countryId) {
-  currentCountry = countryId;
-  const year = parseInt(document.getElementById('yearInput').value);
-  updateInfoPanel(countryId, year);
+ currentCountry = countryId;
+ const year = parseInt(document.getElementById('yearInput').value);
+ updateInfoPanel(countryId, year);
 }
 
 // --- При изменении года ---
 function updateTime() {
-  const year = parseInt(document.getElementById('yearInput').value);
-  updateInfoPanel(currentCountry, year);
+ const year = parseInt(document.getElementById('yearInput').value);
+ updateInfoPanel(currentCountry, year);
 }
 
 Котик🍀🌻,
@@ -152,3 +153,4 @@ updateTime();
 
 </body>
 </html>
+
